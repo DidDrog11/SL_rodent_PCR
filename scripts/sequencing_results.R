@@ -1,3 +1,5 @@
+source(here::here("scripts", "library.R"))
+
 sequencing <- read_csv(here("data", "Inventory", "sequencing.csv"))
 
 rodent_trapping <- readRDS(gzcon(url("https://github.com/DidDrog11/rodent_trapping/raw/main/data/data_for_export/combined_data.rds")))
@@ -10,4 +12,12 @@ enriched_sequencing <- sequencing %>%
               select(rodent_uid, trap_uid, clean_names, sex, age_group, weight, head_body, tail, hind_foot, length_skull),
               by = c("rodent_uid"))
 
-table(enriched_sequencing$BLAST, enriched_sequencing$clean_names)
+require_sequencing <- enriched_sequencing %>%
+  filter(is.na(blastn))
+
+require_checking <- enriched_sequencing %>%
+  mutate(field_genus = str_split(clean_names, "_", simplify = TRUE)[ , 1],
+         sequence_genus = str_split(blastn, "_", simplify = TRUE)[ , 1]) %>%
+  filter(field_genus != sequence_genus)
+
+table(enriched_sequencing$blastn, enriched_sequencing$clean_names)
