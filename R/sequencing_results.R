@@ -1,4 +1,4 @@
-source(here::here("scripts", "library.R"))
+source(here::here("R", "library.R"))
 
 sequencing <- read_csv(here("data", "Inventory", "sequencing.csv"))
 
@@ -21,3 +21,11 @@ require_checking <- enriched_sequencing %>%
   filter(field_genus != sequence_genus)
 
 table(enriched_sequencing$blastn, enriched_sequencing$clean_names)
+
+dir.create(here("data", "output"))
+
+rodent_sequences = list(rodent_sequences = enriched_sequencing,
+                        require_checking = require_checking)
+
+write_rds(x = rodent_sequences,
+          file = here("data", "output", "rodent_sequences.rds"))
