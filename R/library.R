@@ -5,6 +5,8 @@ pkgs =
     "genbankr", 
     "ape",
     "rentrez",
+    "readr",
+    "readxl",
     "insect",
     "tidyverse",
     "seqinr"
